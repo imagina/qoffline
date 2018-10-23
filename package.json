@@ -1,0 +1,33 @@
+{
+  "author": {
+    "name": "http://imaginacolombia.com/"
+  },
+  "bugs": {
+    "url": "https://github.com/imagina/qoffline/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "axios": "^0.18.0",
+  },
+  "deprecated": false,
+  "description": "Quasar Framework, Module to manage requests and views in Offline Mode",
+  "homepage": "https://github.com/imagina/qoffline#readme",
+  "keywords": [
+    "quasar",
+    "laravel",
+    "asgardcms",
+    "offline"
+  ],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "@imagina/qoffline",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imagina/qoffline.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.0.1"
+  
+}
