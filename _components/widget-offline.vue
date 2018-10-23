@@ -50,16 +50,25 @@
       }
     },
     methods: {
+      /**
+       * switch state in store
+       * if is onLine send and flush requests saved in localForage store
+       */
       connectionSwitch() {
         
         if (navigator.onLine) {
+          this.$store.dispatch("offline/APP_ONLINE_SENDING_REQUESTS");
           request.sendAndflushRequests();
         } else{
           this.$store.dispatch("offline/APP_OFFLINE")
         }
         
       },
-      
+  
+      /**
+       * Render list of pending requests saved in localForage
+       * @returns {Promise<void>}
+       */
       async showActionSheetWithIcons() {
         await helper.storage.get.item("offlineRequests").then(requests => {
           let actions = [];

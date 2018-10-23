@@ -64,8 +64,7 @@ class Request {
   saveRequest(reqConfig) {
     return new Promise((resolve, reject) => {
       this.serialize(reqConfig).then( (serialized) => {
-        console.warn("request serialized: ", serialized);
-  
+        // this state save the request in localForage, and verify if is duplicated
         store.dispatch("offline/APP_SAVE_REQUEST",serialized).then(response => {
           resolve(true)
         }).catch(error =>{
@@ -83,16 +82,15 @@ class Request {
     //The reduce() chains one promise per serialized request, not allowing to progress to the next one until completing the current.
     var sending = requests.reduce((prevPromise, serialized) => {
       
-      console.warn('Sending', serialized);
-      
-      store.dispatch("offline/APP_ONLINE_SENDING_REQUESTS");
-      
       return prevPromise.then(() => {
+        // deserialize function: convert the request in a Promise.resolve(request)
         return this.deserialize(serialized).then((request) => {
+          // request send
           return http.request(request).then(response => {
+            // update localForage
             this.refresh(serialized);
-            console.warn("Request Sent",request);
           });
+          
         });
       });
     },Promise.resolve());
@@ -112,17 +110,19 @@ class Request {
       if (!requests.length) {
         return Promise.resolve();
       }
-      //Else, send the requests in order…
+      //Else, send the requests in order, then dispatch ONLINE state
       return this.sendRequests(requests).then( () => {
-        console.log("ALL REQUESTS SENT");
         store.dispatch("offline/APP_ONLINE");
         
       });
     });
   }
   
+  /**
+   * each request sent, its refresh the requests list in localForage
+   * @param request
+   */
   refresh(request){
-    
       helper.storage.get.item("offlineRequests").then(offReqsts => {
         let pos = -1;
         offReqsts.forEach((offReq,index)=>{
@@ -130,16 +130,12 @@ class Request {
             pos = index;
         })
         offReqsts.splice(pos, 1);
-        
         try {
-          helper.storage.set("offlineRequests", offReqsts).then(response =>{
-          });
+          helper.storage.set("offlineRequests", offReqsts);
         } catch (error) {
           console.log(error)
         }
       })
-    
-    
   }
   
 }
