@@ -108,6 +108,7 @@ class Request {
       requests = requests || [];
       //If empty, nothing to do!
       if (!requests.length) {
+        store.dispatch("offline/APP_ONLINE");
         return Promise.resolve();
       }
       //Else, send the requests in order, then dispatch ONLINE state
@@ -131,7 +132,9 @@ class Request {
         })
         offReqsts.splice(pos, 1);
         try {
-          helper.storage.set("offlineRequests", offReqsts);
+          helper.storage.set("offlineRequests", offReqsts).then(response =>{
+            store.dispatch("APP_ONLINE_SENDING_REQUESTS");
+          })
         } catch (error) {
           console.log(error)
         }

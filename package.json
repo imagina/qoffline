@@ -1,6 +1,6 @@
 {
   "name": "@imagina/qoffline",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Quasar Framework, Module to manage requests and views in Offline Mode",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,10 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/imagina/qoffline.git"
+  },
+  "dependencies": {
+    "@imagina/qhelper": ">=0.0.7",
+    "axios": "^0.18.0"
   },
   "author": "http://imaginacolombia.com/",
   "license": "ISC",

@@ -42,7 +42,10 @@ export const APP_SAVE_REQUEST = ({commit, dispatch},serialized) => {
 export const APP_ONLINE_SENDING_REQUESTS = ({commit}) =>{
   helper.storage.get.item('offlineRequests').then(offReqsts => {
     offReqsts = offReqsts || [];
-    commit('APP_ONLINE_SENDING_REQUESTS', offReqsts);
+    if(offReqsts.length)
+      commit('APP_ONLINE_SENDING_REQUESTS', offReqsts);
+    else
+      commit('APP_ONLINE');
   });
   
 }
