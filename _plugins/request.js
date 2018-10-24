@@ -1,6 +1,7 @@
 import {helper} from '@imagina/qhelper/_plugins/helper' //LocalForage
 import http from "axios"
 import store from 'src/store/index'
+import {alert} from '@imagina/qhelper/_plugins/alert'
 
 class Request {
   constructor() {
@@ -88,6 +89,7 @@ class Request {
           // request send
           return http.request(request).then(response => {
             // update localForage
+            alert.success("Jobs Sent: "+serialized.type+ " ID: "+ serialized.id );
             this.refresh(serialized);
           });
           
