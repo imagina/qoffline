@@ -1,12 +1,13 @@
 import router from 'src/router/index';
 import {helper} from '@imagina/qhelper/_plugins/helper';
 import {request} from '@imagina/qoffline/_plugins/request';
-import axios from 'axios';
-import config from 'src/config/index'
+
 
 export const APP_OFFLINE = ({commit, dispatch}) => {
   helper.storage.get.item('offlineRequests').then(offReqsts => {
-    offReqsts = offReqsts || [];
+
+    offReqsts = request.userCurrentRequests(offReqsts);
+    
     commit('APP_OFFLINE', offReqsts);
   });
 };
@@ -17,10 +18,10 @@ export const APP_SAVE_REQUEST = ({commit, dispatch},serialized) => {
 
       offReqsts = offReqsts || [];
       let save = true;
-      
+
       //find if exist same request in offline request saved then save pass to false
       offReqsts.forEach((request, index) => {
-        if (request.id == serialized.id && request.type == serialized.type)
+        if (request.id == serialized.id && request.type == serialized.type && request.userId == serialized.userId)
           save = false;
       })
       
@@ -28,6 +29,7 @@ export const APP_SAVE_REQUEST = ({commit, dispatch},serialized) => {
       if (save) {
         offReqsts.push(serialized);
         helper.storage.set('offlineRequests', offReqsts).then(function () {
+          offReqsts = request.userCurrentRequests(offReqsts);
           commit('APP_OFFLINE',offReqsts);
           resolve(true);
         });
@@ -39,14 +41,12 @@ export const APP_SAVE_REQUEST = ({commit, dispatch},serialized) => {
   })
 };
 
-export const APP_ONLINE_SENDING_REQUESTS = ({commit}) =>{
-  helper.storage.get.item('offlineRequests').then(offReqsts => {
-    offReqsts = offReqsts || [];
-    if(offReqsts.length)
-      commit('APP_ONLINE_SENDING_REQUESTS', offReqsts);
-    else
-      commit('APP_ONLINE');
-  });
+export const APP_ONLINE_SENDING_REQUESTS = ({commit, dispatch},offReqsts) =>{
+  offReqsts = request.userCurrentRequests(offReqsts);
+  if(offReqsts.length)
+    commit('APP_ONLINE_SENDING_REQUESTS', offReqsts);
+  else
+    commit('APP_ONLINE');
   
 }
 

@@ -54,38 +54,41 @@
        * switch state in store
        * if is onLine send and flush requests saved in localForage store
        */
-      connectionSwitch() {
-        
+      async connectionSwitch() {
         if (navigator.onLine) {
-          this.$store.dispatch("offline/APP_ONLINE_SENDING_REQUESTS");
-          request.sendAndflushRequests();
-        } else{
+          if(!this.$store.getters["offline/isSendingRequests"]){
+            let offReqsts = await helper.storage.get.item("offlineRequests");
+            this.$store.dispatch("offline/APP_ONLINE_SENDING_REQUESTS", offReqsts);
+            request.sendAndflushRequests();
+          }
+        } else {
           this.$store.dispatch("offline/APP_OFFLINE")
         }
         
       },
-  
+      
       /**
        * Render list of pending requests saved in localForage
        * @returns {Promise<void>}
        */
       async showActionSheetWithIcons() {
-        await helper.storage.get.item("offlineRequests").then(requests => {
+        let requests = this.$store.getters["offline/requests"];
           let actions = [];
-          
           if (requests) {
             requests.forEach((request, index) => {
               actions.push({
-                label: (index + 1) + '. Type: ' + request.type + ', ID: ' + request.id ,
+                label: (index + 1) + '. Type: ' + request.type + ', ID: ' + request.id,
                 icon: 'fas fa-caret-right',
-                handler: () => {}
+                handler: () => {
+                }
               });
             })
           }
           actions = actions.length ? actions : [{
             label: 'No Jobs Pending',
             icon: 'far fa-thumbs-up',
-            handler: () => {}
+            handler: () => {
+            }
           }];
           this.$q.actionSheet({
             actions: actions
@@ -94,7 +97,7 @@
           }).catch(() => {
             // user dismissed
           })
-        })
+
       }
     }
     
