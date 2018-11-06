@@ -2,8 +2,8 @@
 export const someGetter = (state) => {}
 */
 
-export const requests = (state) => {
-    return state.offlineRequests;
+export const offlineRequests = (state) => {
+  return state.offlineRequests;
 };
 
 export const isOffline = (state) => {
@@ -15,5 +15,5 @@ export const isSendingRequests = (state) => {
 };
 
 export const totalRequests = (state) => {
-    return state.totalRequests;
+    return state.totalOffRequests;
 }

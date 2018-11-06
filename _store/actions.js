@@ -5,14 +5,12 @@ import {request} from '@imagina/qoffline/_plugins/request';
 
 export const APP_OFFLINE = ({commit, dispatch}) => {
   helper.storage.get.item('offlineRequests').then(offReqsts => {
-
-    offReqsts = request.userCurrentRequests(offReqsts);
-    
+    offReqsts = request.userCurrentOfflineRequests(offReqsts);
     commit('APP_OFFLINE', offReqsts);
   });
 };
 
-export const APP_SAVE_REQUEST = ({commit, dispatch},serialized) => {
+export const APP_SAVE_OFFLINE_REQUEST = ({commit, dispatch},serialized) => {
   return new Promise((resolve, reject) => {
     helper.storage.get.item('offlineRequests').then(function (offReqsts) {
 
@@ -29,11 +27,11 @@ export const APP_SAVE_REQUEST = ({commit, dispatch},serialized) => {
       if (save) {
         offReqsts.push(serialized);
         helper.storage.set('offlineRequests', offReqsts).then(function () {
-          offReqsts = request.userCurrentRequests(offReqsts);
-          commit('APP_OFFLINE',offReqsts);
+          offReqsts = request.userCurrentOfflineRequests(offReqsts);
+          dispatch("APP_OFFLINE")
           resolve(true);
         });
-      } else
+      }else
         reject(false)
     
     });
@@ -41,15 +39,19 @@ export const APP_SAVE_REQUEST = ({commit, dispatch},serialized) => {
   })
 };
 
+
 export const APP_ONLINE_SENDING_REQUESTS = ({commit, dispatch},offReqsts) =>{
-  offReqsts = request.userCurrentRequests(offReqsts);
+  offReqsts = request.userCurrentOfflineRequests(offReqsts);
   if(offReqsts.length)
-    commit('APP_ONLINE_SENDING_REQUESTS', offReqsts);
+    commit('APP_ONLINE_SENDING_REQUESTS',offReqsts);
   else
     commit('APP_ONLINE');
   
 }
 
 export const APP_ONLINE = ({commit, dispatch}) => {
-  commit('APP_ONLINE');
+
+      commit('APP_ONLINE');
+
+  
 }

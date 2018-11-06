@@ -4,7 +4,7 @@
       type="warning"
       v-if="$store.state.offline.offlineMode"
       class="text-center"
-      :actions="[{ label: this.$store.state.offline.totalRequests +' Pending Jobs', handler: () => { showActionSheetWithIcons() } }]">
+      :actions="[{ label: this.$store.state.offline.totalOffRequests +' Pending Jobs', handler: () => { showActionSheetWithIcons() } }]">
       
       Offline Mode
       <q-icon name="wifi_off"/>
@@ -13,7 +13,7 @@
       type="positive"
       v-if="$store.state.offline.sendingRequests"
       class="text-center"
-      :actions="[{ label: this.$store.state.offline.totalRequests +' Pending Jobs', handler: () => { showActionSheetWithIcons() } }]">
+      :actions="[{ label: this.$store.state.offline.totalOffRequests +' Pending Jobs', handler: () => { showActionSheetWithIcons() } }]">
       
       Online Mode, Sending Jobs
       <q-spinner-radio id="sendingJobs"></q-spinner-radio>
@@ -55,14 +55,15 @@
        * if is onLine send and flush requests saved in localForage store
        */
       async connectionSwitch() {
+        let offReqsts = await helper.storage.get.item("offlineRequests") || [];
+        
         if (navigator.onLine) {
           if(!this.$store.getters["offline/isSendingRequests"]){
-            let offReqsts = await helper.storage.get.item("offlineRequests");
             this.$store.dispatch("offline/APP_ONLINE_SENDING_REQUESTS", offReqsts);
-            request.sendAndflushRequests();
+            request.sendAndflushRequests(offReqsts);
           }
         } else {
-          this.$store.dispatch("offline/APP_OFFLINE")
+          this.$store.dispatch("offline/APP_OFFLINE",offReqsts)
         }
         
       },
@@ -72,7 +73,7 @@
        * @returns {Promise<void>}
        */
       async showActionSheetWithIcons() {
-        let requests = this.$store.getters["offline/requests"];
+        let requests = this.$store.getters["offline/offlineRequests"];
           let actions = [];
           if (requests) {
             requests.forEach((request, index) => {

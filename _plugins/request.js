@@ -57,7 +57,7 @@ class Request {
     return new Promise((resolve, reject) => {
       this.filterMethod(reqConfig).then((serialized) => {
         // this state save the request in localForage, and verify if is duplicated
-        store.dispatch("offline/APP_SAVE_REQUEST", serialized).then(response => {
+        store.dispatch("offline/APP_SAVE_OFFLINE_REQUEST", serialized).then(response => {
           resolve(true)
         }).catch(error => {
           reject(error)
@@ -84,10 +84,28 @@ class Request {
               if (response) {
                 alert.success("Job Sent: " + serialized.type + " ID: " + serialized.id);
                 this.refresh(serialized);
-              } else {
-                store.dispatch("auth/AUTH_LOGOUT");
-                //alert.error("Error Sending Job: "+serialized.type+ " ID: "+ serialized.id );
               }
+            }).catch(error =>{
+              let message = error.response ? error.response.data.error : ' Network Error';
+              
+              if(error.response){
+                serialized["error"] = message;
+                
+                var notification = {
+                  message: "Request Failed: "+ message,
+                  from: "me",
+                  type: "requestFailed",
+                  data: serialized,
+                  viewed: false
+                }
+                store.dispatch('notification/PUSH_NOTIFICATION',[notification]);
+                
+                this.refresh(serialized);
+              }
+              
+              alert.error(notification.message ? notification.message : message+", id:"+serialized.id,"bottom")
+                //store.dispatch("auth/AUTH_LOGOUT");
+                //alert.error("Error Sending Job: "+serialized.type+ " ID: "+ serialized.id );
             });
 
         });
@@ -100,18 +118,19 @@ class Request {
    * clean offlineRequest of localstorage
    * @returns {PromiseLike<T> | Promise<T>}
    */
-  sendAndflushRequests() {
-  
-    let requests = store.getters["offline/requests"];
-      requests = requests || [];
+  async sendAndflushRequests(offReqsts) {
+    offReqsts = this.userCurrentOfflineRequests(offReqsts);
       //If empty, nothing to do!
-      if (!requests.length) {
+    
+      if (!offReqsts.length) {
         store.dispatch("offline/APP_ONLINE");
         return Promise.resolve();
       }
- 
+      
+      
+      
       //Else, send the requests in order, then dispatch ONLINE state
-      return this.sendRequests(requests).then(() => {
+      return this.sendRequests(offReqsts).then(() => {
         store.dispatch("offline/APP_ONLINE");
       });
 
@@ -133,12 +152,11 @@ class Request {
     })
     if(pos != -1)
       offReqsts.splice(pos, 1);
-    
-    
+  
+  
     await helper.storage.set('offlineRequests', offReqsts);
-    
-    offReqsts = this.userCurrentRequests(offReqsts);
-    await store.dispatch('offline/APP_ONLINE_SENDING_REQUESTS', offReqsts);
+
+    await store.dispatch('offline/APP_ONLINE_SENDING_REQUESTS',offReqsts);
   }
   
   /**
@@ -146,20 +164,21 @@ class Request {
    * @param offReqsts
    * @returns {Array}
    */
-  userCurrentRequests(offReqsts) {
-    offReqsts = offReqsts || []
-    offReqsts = offReqsts.slice(0);
+  userCurrentOfflineRequests(requests) {
+    requests = requests || [];
+    requests = requests.slice(0);
     if(store.getters["auth/user"]) {
       let userId = store.getters["auth/user"].id;
-      let userCurrentRqsts = [];
-      offReqsts.forEach((rqst, index) => {
+      let resultRqsts = [];
+      requests.forEach((rqst, index) => {
         if (rqst.userId == userId)
-          userCurrentRqsts.push(rqst);
+          resultRqsts.push(rqst);
       })
-      return userCurrentRqsts;
+      return resultRqsts;
     }else
-      return offReqsts;
+      return requests;
   }
+  
   
 }
 
