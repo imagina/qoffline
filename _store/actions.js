@@ -5,7 +5,7 @@ import {request} from '@imagina/qoffline/_plugins/request';
 
 export const APP_OFFLINE = ({commit, dispatch}) => {
   helper.storage.get.item('offlineRequests').then(offReqsts => {
-    offReqsts = request.userCurrentOfflineRequests(offReqsts);
+    offReqsts = request.currentOfflineUserRequests(offReqsts);
     commit('APP_OFFLINE', offReqsts);
   });
 };
@@ -19,7 +19,7 @@ export const APP_SAVE_OFFLINE_REQUEST = ({commit, dispatch},serialized) => {
 
       //find if exist same request in offline request saved then save pass to false
       offReqsts.forEach((request, index) => {
-        if (request.id == serialized.id && request.type == serialized.type && request.userId == serialized.userId)
+        if (request.data.uid == serialized.data.uid)
           save = false;
       })
       
@@ -27,7 +27,7 @@ export const APP_SAVE_OFFLINE_REQUEST = ({commit, dispatch},serialized) => {
       if (save) {
         offReqsts.push(serialized);
         helper.storage.set('offlineRequests', offReqsts).then(function () {
-          offReqsts = request.userCurrentOfflineRequests(offReqsts);
+          offReqsts = request.currentOfflineUserRequests(offReqsts);
           dispatch("APP_OFFLINE")
           resolve(true);
         });
@@ -41,7 +41,7 @@ export const APP_SAVE_OFFLINE_REQUEST = ({commit, dispatch},serialized) => {
 
 
 export const APP_ONLINE_SENDING_REQUESTS = ({commit, dispatch},offReqsts) =>{
-  offReqsts = request.userCurrentOfflineRequests(offReqsts);
+  offReqsts = request.currentOfflineUserRequests(offReqsts);
   if(offReqsts.length)
     commit('APP_ONLINE_SENDING_REQUESTS',offReqsts);
   else

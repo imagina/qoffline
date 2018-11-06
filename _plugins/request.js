@@ -2,6 +2,7 @@ import {helper} from '@imagina/qhelper/_plugins/helper' //LocalForage
 import http from "axios"
 import store from 'src/store/index'
 import {alert} from '@imagina/qhelper/_plugins/alert'
+import {notification} from '@imagina/qnotification/_plugins/notification'
 
 class Request {
   constructor() {
@@ -91,19 +92,12 @@ class Request {
               if(error.response){
                 serialized["error"] = message;
                 
-                var notification = {
-                  message: "Request Failed: "+ message,
-                  from: "me",
-                  type: "requestFailed",
-                  data: serialized,
-                  viewed: false
-                }
-                store.dispatch('notification/PUSH_NOTIFICATION',[notification]);
+                notification.pushNotification("Request Failed: " + message,"me","requestFailed",serialized);
                 
                 this.refresh(serialized);
               }
               
-              alert.error(notification.message ? notification.message : message+", id:"+serialized.id,"bottom")
+              alert.error("Request Failed: " + message,"bottom")
                 //store.dispatch("auth/AUTH_LOGOUT");
                 //alert.error("Error Sending Job: "+serialized.type+ " ID: "+ serialized.id );
             });
@@ -119,7 +113,7 @@ class Request {
    * @returns {PromiseLike<T> | Promise<T>}
    */
   async sendAndflushRequests(offReqsts) {
-    offReqsts = this.userCurrentOfflineRequests(offReqsts);
+    offReqsts = this.currentOfflineUserRequests(offReqsts);
       //If empty, nothing to do!
     
       if (!offReqsts.length) {
@@ -164,7 +158,7 @@ class Request {
    * @param offReqsts
    * @returns {Array}
    */
-  userCurrentOfflineRequests(requests) {
+  currentOfflineUserRequests(requests) {
     requests = requests || [];
     requests = requests.slice(0);
     if(store.getters["auth/user"]) {

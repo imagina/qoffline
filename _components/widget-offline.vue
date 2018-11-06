@@ -1,8 +1,14 @@
 <template>
   <div id="offlineBar">
+    <q-page-sticky
+      v-if="$store.state.offline.offlineMode"
+      position="bottom-left"
+      :offset="[18, 18]">
+      <q-btn round color="warning" @click="offlineBar=!offlineBar" :icon="offlineBar ? 'arrow_drop_down' : 'wifi_off'" />
+    </q-page-sticky>
     <q-alert
       type="warning"
-      v-if="$store.state.offline.offlineMode"
+      v-if="$store.state.offline.offlineMode && offlineBar"
       class="text-center"
       :actions="[{ label: this.$store.state.offline.totalOffRequests +' Pending Jobs', handler: () => { showActionSheetWithIcons() } }]">
       
@@ -46,7 +52,8 @@
     data() {
       return {
         requestActions: false,
-        actions: []
+        actions: [],
+        offlineBar: false
       }
     },
     methods: {
@@ -63,7 +70,7 @@
             request.sendAndflushRequests(offReqsts);
           }
         } else {
-          this.$store.dispatch("offline/APP_OFFLINE",offReqsts)
+          this.$store.dispatch("offline/APP_OFFLINE")
         }
         
       },
@@ -86,8 +93,8 @@
             })
           }
           actions = actions.length ? actions : [{
-            label: 'No Jobs Pending',
-            icon: 'far fa-thumbs-up',
+            label: 'No Pending Jobs',
+            icon: 'thumb_up',
             handler: () => {
             }
           }];
