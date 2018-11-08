@@ -1,6 +1,6 @@
 {
   "name": "@imagina/qoffline",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Quasar Framework, Module to manage requests and views in Offline Mode",
   "main": "index.js",
   "scripts": {
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@imagina/qhelper": ">=0.0.14",
+    "@imagina/qnotification": ">=0.0.2",
     "axios": "^0.18.0"
   },
   "author": "http://imaginacolombia.com/",
