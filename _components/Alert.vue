@@ -1,6 +1,6 @@
 <template>
   <q-banner v-if="$store.state.qofflineMaster.isAppOffline" inline-actions class="text-white bg-red text-center offline-bar">
-    You have lost connection to the internet. This app is offline.
+    {{ $tr('isite.cms.message.appOffline') }}
   </q-banner>
 </template>
 
