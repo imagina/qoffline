@@ -1,5 +1,5 @@
 <template>
-  <q-banner v-if="$store.state.qofflineMaster.isAppOffline" inline-actions class="text-white bg-red text-center offline-bar">
+  <q-banner v-if="true" inline-actions class="text-black bg-warning text-center offline-bar">
     {{ $tr('isite.cms.message.appOffline') }}
   </q-banner>
 </template>
@@ -34,6 +34,7 @@ export default {
     bottom: 60px;
     width: 100%;
     transform: translateX(-15px);
+    min-height: 27px !important;
   }
   @media(min-width: 991px){
       .offline-bar{
