@@ -21,10 +21,12 @@ export default {
         this.$store.dispatch("qofflineMaster/APP_OFFLINE")
         this.$q.notify({
           color: 'warning',
+          textColor: "dark",
           icon: 'fa-light fa-cloud-slash',
           message: this.$tr('isite.cms.message.appOffline'),
           position: 'bottom-left',
-          timeout: 200
+          timeout: 20000,
+          actions: [{ icon: 'close', color: 'white' }]
         })
       }
       
