@@ -58,12 +58,17 @@ export default {
                     role.options.offlineRequests.forEach((offlineReq) => {
                         this.$crud.index(offlineReq.apiRoute, { params: { ...offlineReq.requestParams } }).then(response => {
                             quantityPercentage += percentageByRequest;
-                            this.progressRequestsCompleted = parseInt(quantityPercentage);
+                            this.progressRequestsCompleted = Number(`0.${parseInt(quantityPercentage)}`);
                             this.progressLabel = `${quantityPercentage.toFixed(2)}%`;
+                            console.log(this.progressRequestsCompleted)
+                            if (this.progressRequestsCompleted === 0.1) {
+                                this.modal.show = false;
+                                this.progressRequestsCompleted = 0;
+                                this.progressLabel = '00.00%';
+                            }
                         });
                     });
                 })
-                //this.modal.show = false;
             }
         },
         deletePreviousCacheByRequest() {
