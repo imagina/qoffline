@@ -12,8 +12,8 @@ export const APP_OFFLINE = ({ commit }) => {
 export const OFFLINE_REQUESTS = ({commit, dispatch, state},params = {}) => {
     let interval = setInterval(async() => {
       let requests = await cache.get.item('requests');
-      if(requests && requests.length) {
-        let userRequests = requests.filter(request => params.userId && request.userId == params.userId)
+      if(requests && Object.keys(requests).length) {
+        let userRequests = requests[params.userId] || []
         if(userRequests) {
           commit('SET_REQUESTS', userRequests);
         }
