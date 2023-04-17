@@ -57,7 +57,7 @@ export default {
   methods: {
     getTitle(request){
       const bodyParse = JSON.parse(request.body);
-      return bodyParse.attributes.title_offline || request.titleOffline;
+      return bodyParse?.attributes?.title_offline || request.titleOffline;
 
     },
     translateRequestStatus(status) {
