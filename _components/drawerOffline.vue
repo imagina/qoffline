@@ -16,7 +16,7 @@
       <div v-for="request in this.$store.state.qofflineMaster.requestsReversed" :key="request._id">
         <q-item class="q-py-xs">
           <q-item-section>
-            <q-item-label>{{ request.titleOffline }}</q-item-label>
+            <q-item-label>{{ getTitle(request)}}</q-item-label>
             <q-item-label caption lines="2">{{ translateRequestMethod(request.method) }}</q-item-label>
           </q-item-section>
           <q-item-section side top>
@@ -55,6 +55,11 @@ export default {
     }
   },
   methods: {
+    getTitle(request){
+      const bodyParse = JSON.parse(request.body);
+      return bodyParse.attributes.title_offline || request.titleOffline;
+
+    },
     translateRequestStatus(status) {
       switch (status) {
         case 'pending': return "Pending";
