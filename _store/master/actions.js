@@ -25,23 +25,37 @@ export const OFFLINE_REQUESTS = ({commit, dispatch, state},params = {}) => {
 
 export const REFRESH_OFFLINE = ({commit, dispatch, state}) => {
   return new Promise(async (resolve, reject) => {
-    appConfig.modules.forEach(moduleName => {
-      let offlineConfig = false
 
-      //Search module in node_modules
-      try {
-        offlineConfig = require(`@imagina/${moduleName}/_config/offline`)
-      } catch (e) {
+    dispatch("SUB_MODULES_REFRESH_OFFLINE")
+
+    let interval = setInterval(async() => {
+      let refreshOffline = await cache.get.item("refreshOffline")
+      if(refreshOffline){
+        dispatch("SUB_MODULES_REFRESH_OFFLINE", true)
+        cache.set("refreshOffline", false)
       }
+    }, 1000 );
 
-      //Search module in project (src)
-      try {
-        offlineConfig = require(`src/modules/${moduleName}/_config/offline`)
-      } catch (e) {
-      }
-
-      offlineConfig ? offlineConfig.default() : {}
-
-    });
   })
 }
+
+export const SUB_MODULES_REFRESH_OFFLINE = ({commit, dispatch, state}, refresh = false) => {
+  appConfig.modules.forEach(moduleName => {
+    let offlineConfig = false
+
+    //Search module in node_modules
+    try {
+      offlineConfig = require(`@imagina/${moduleName}/_config/offline`)
+    } catch (e) {
+    }
+
+    //Search module in project (src)
+    try {
+      offlineConfig = require(`src/modules/${moduleName}/_config/offline`)
+    } catch (e) {
+    }
+
+    offlineConfig ? offlineConfig.default(refresh) : {}
+
+  });
+};
