@@ -18,6 +18,7 @@ export default {
       if (navigator.onLine) {
         this.$store.dispatch("qofflineMaster/APP_ONLINE")
       } else {
+        console.log("Testing")
         this.$store.dispatch("qofflineMaster/APP_OFFLINE")
         this.$q.notify({
           color: 'warning',
