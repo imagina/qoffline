@@ -10,15 +10,13 @@ export default {
   },
   mounted() {
     window.addEventListener("online", this.connectionSwitch);
-    window.addEventListener("offline", this.connectionSwitch);
-    this.connectionSwitch();  
+    window.addEventListener("offline", this.connectionSwitch); 
   },
-  methods: {
+  methods: {  
     connectionSwitch() {
       if (navigator.onLine) {
         this.$store.dispatch("qofflineMaster/APP_ONLINE")
       } else {
-        console.log("Testing")
         this.$store.dispatch("qofflineMaster/APP_OFFLINE")
         this.$q.notify({
           color: 'warning',
@@ -29,8 +27,7 @@ export default {
           timeout: 20000,
           actions: [{ icon: 'close', color: 'white' }]
         })
-      }
-      
+      }    
     },
   }
 }
