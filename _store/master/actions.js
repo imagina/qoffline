@@ -1,8 +1,6 @@
-import axios from "axios";
-import crud from "@imagina/qcrud/_services/baseService";
 import appConfig from 'src/config/app'
 import cache from "@imagina/qsite/_plugins/cache";
-import Vue, {getCurrentInstance} from 'vue';
+import eventBus from '@imagina/qsite/_plugins/eventBus';
 export const APP_ONLINE = ({ commit }) => {
   commit('APP_ONLINE');
 }
@@ -34,11 +32,9 @@ export const REFRESH_OFFLINE = ({ commit, dispatch, state }) => {
       if (refreshOffline) {
         dispatch("SUB_MODULES_REFRESH_OFFLINE", true)
         cache.set("refreshOffline", false)
-        const instance = getCurrentInstance();
-        const root = instance.proxy.$root
-        root.$emit('page.data.refresh')
-        root.$emit('crud.data.refresh')
-        root.$emit('export.data.refresh')
+        eventBus.$emit('page.data.refresh')
+        eventBus.$emit('crud.data.refresh')
+        eventBus.$emit('export.data.refresh')
       }
     }, 1000);
 
