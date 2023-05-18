@@ -1,37 +1,27 @@
-<template>
-</template>
+<template></template>
 
 <script>
 export default {
   name: "Alert",
-  beforeDestroy(){
+  beforeDestroy() {
     window.removeEventListener("online", this.connectionSwitch);
     window.removeEventListener("offline", this.connectionSwitch);
   },
   mounted() {
     window.addEventListener("online", this.connectionSwitch);
-    window.addEventListener("offline", this.connectionSwitch); 
+    window.addEventListener("offline", this.connectionSwitch);
+    this.connectionSwitch();
   },
-  methods: {  
+  methods: {
     connectionSwitch() {
       if (navigator.onLine) {
         this.$store.dispatch("qofflineMaster/APP_ONLINE")
       } else {
         this.$store.dispatch("qofflineMaster/APP_OFFLINE")
-        this.$q.notify({
-          color: 'warning',
-          textColor: "dark",
-          icon: 'fa-light fa-cloud-slash',
-          message: this.$tr('isite.cms.message.appOffline'),
-          position: 'bottom-left',
-          timeout: 20000,
-          actions: [{ icon: 'close', color: 'white' }]
-        })
-      }    
+      }
     },
   }
 }
 </script>
 
-<style>
-</style>
+<style></style>
