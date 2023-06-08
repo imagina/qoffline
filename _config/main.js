@@ -3,7 +3,7 @@ import eventBus from '@imagina/qsite/_plugins/eventBus';
 export default {
     moduleName: 'ioffline',
     moduleTitle: 'ioffline.cms.sidebar.adminGroup',
-    configList: [
+    /*configList: [
         {
             icon: 'fa-regular fa-wifi-slash',
             title: 'isite.cms.label.offlineSync',
@@ -11,5 +11,5 @@ export default {
                 eventBus.$emit('offlineSync')
             }
         }
-    ],
+    ],*/
 }
