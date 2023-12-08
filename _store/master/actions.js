@@ -1,18 +1,35 @@
 import appConfig from 'src/config/app'
 import cache from "@imagina/qsite/_plugins/cache";
 import eventBus from '@imagina/qsite/_plugins/eventBus';
+import workOrderList from '../../../../../src/modules/qramp/_store/actions/workOrderList';
+
 export const APP_ONLINE = ({ commit }) => {
   commit('APP_ONLINE');
 }
 export const APP_OFFLINE = ({ commit }) => {
   commit('APP_OFFLINE');
 };
+let callToAllLists = false
 
 export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
-  let interval = setInterval(async () => {
-    let requests = await cache.get.item('requests');
+  const interval = setInterval(async () => {
+    const requests = await cache.get.item('requests');
+    const STATUS = 'pending'
+
     if (requests && Object.keys(requests).length) {
-      let userRequests = requests[params.userId] || []
+      const userRequests = requests[params.userId] || []
+
+      const thereAreRequests = userRequests.some(
+        requests => requests.status === STATUS
+      )
+      if (!thereAreRequests && !callToAllLists) {
+        workOrderList().getAllList(true)
+        callToAllLists = true
+      }
+
+      if (thereAreRequests && callToAllLists) {
+        callToAllLists = false
+      }
       if (userRequests) {
         commit('SET_REQUESTS', userRequests);
       }

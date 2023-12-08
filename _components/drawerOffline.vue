@@ -47,6 +47,7 @@ export default {
   mounted() {
     this.$nextTick(async () => {
       this.$store.dispatch('qofflineMaster/OFFLINE_REQUESTS', { userId: this.$store.state.quserAuth.userId });
+      await config('main').qramp.offline(true)
     });
   },
   data() {
