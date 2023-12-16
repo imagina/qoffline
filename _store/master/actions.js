@@ -1,7 +1,7 @@
 import appConfig from 'src/config/app'
 import cache from "@imagina/qsite/_plugins/cache";
 import eventBus from '@imagina/qsite/_plugins/eventBus';
-import workOrderList from '../../../../../src/modules/qramp/_store/actions/workOrderList';
+import workOrderList from 'src/modules/qramp/_store/actions/workOrderList';
 
 export const APP_ONLINE = ({ commit }) => {
   commit('APP_ONLINE');
