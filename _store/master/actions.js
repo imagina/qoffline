@@ -1,5 +1,5 @@
 import appConfig from 'src/config/app'
-import cache from "@imagina/qsite/_plugins/cache";
+import cache from "@imagina/qsite/_plugins/cache";  
 import eventBus from '@imagina/qsite/_plugins/eventBus';
 
 export const APP_ONLINE = ({ commit }) => {
@@ -8,26 +8,14 @@ export const APP_ONLINE = ({ commit }) => {
 export const APP_OFFLINE = ({ commit }) => {
     commit('APP_OFFLINE');
 };
-let callToAllLists = false
 
 export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
     const interval = setInterval(async() => {
         const requests = await cache.get.item('requests');
-        const STATUS = 'pending'
 
         if (requests && Object.keys(requests).length) {
             const userRequests = requests[params.userId] || []
 
-            const thereAreRequests = userRequests.some(
-                requests => requests.status === STATUS
-            )
-            if (!thereAreRequests && !callToAllLists) {
-                callToAllLists = true
-            }
-
-            if (thereAreRequests && callToAllLists) {
-                callToAllLists = false
-            }
             if (userRequests) {
                 commit('SET_REQUESTS', userRequests);
             }
