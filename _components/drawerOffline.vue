@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import state from '../_store/master/state'
+
 export default {
   name: "drawerOffline",
   props: {},
@@ -43,11 +45,27 @@ export default {
 
   beforeDestroy() {
     this.$eventBus.$off('header.badge.manage');
+
+    // Cancelling interval created to update the list 
+    // of requests displayed in drawerOffline.
+
+    // Path where the interval is created: qoffline/_store/master/actions
+    clearInterval(state.offlineInterval)
+    this.$store.commit('qofflineMaster/CLEAR_OFFLINE_INTERVAL', state)
   },
   mounted() {
     this.$nextTick(async () => {
-      this.$store.dispatch('qofflineMaster/OFFLINE_REQUESTS', { userId: this.$store.state.quserAuth.userId });
-      await config('main').qramp.offline(true)
+      this.$store.dispatch(
+        'qofflineMaster/OFFLINE_REQUESTS', 
+        { userId: this.$store.state.quserAuth.userId }
+      )
+      const modules = await config('main')
+
+      Object.entries(modules).forEach(([moduleName, module]) => {
+        if (module.offline && typeof module.offline === 'function') {
+          module.offline(true);
+        } 
+      });
     });
   },
   data() {
