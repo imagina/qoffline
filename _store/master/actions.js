@@ -1,7 +1,7 @@
 import appConfig from 'src/config/app'
 import cache from "@imagina/qsite/_plugins/cache";  
 import eventBus from '@imagina/qsite/_plugins/eventBus';
-import buildKanbanStructure from 'src/modules/qramp/_components/scheduleKanban/actions/buildKanbanStructure.ts';
+import Vue from 'vue'
 
 export const APP_ONLINE = ({ commit }) => {
     commit('APP_ONLINE');
@@ -11,6 +11,8 @@ export const APP_OFFLINE = ({ commit }) => {
 };
 
 export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
+    let executed = false
+
     const interval = setInterval(async() => {
         const requests = await cache.get.item('requests');
         const STATUS = 'pending';
@@ -21,8 +23,22 @@ export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
             if (userRequests) {
                 commit('SET_REQUESTS', userRequests);
                 const pendingRequests = userRequests.filter(request => request.status === STATUS)
-                if (pendingRequests.length) {
-                    buildKanbanStructure()
+
+                const havePendingRequests = pendingRequests.length > 0
+                const haveUserRequests = userRequests.length > 0
+
+                if (havePendingRequests) executed = false
+
+                if (!havePendingRequests && haveUserRequests && !executed) {
+                    Vue.prototype.$alert.info('Synchronizing data')
+                    
+                    const modules = await config('main')
+                    Object.entries(modules).forEach(async ([moduleName, module]) => {
+                        if (module.offline && typeof module.offline === 'function') {
+                            await module.offline(true);
+                        }
+                    });
+                    executed = true
                 }
             }
         }
