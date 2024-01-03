@@ -1,6 +1,7 @@
 import appConfig from 'src/config/app'
 import cache from "@imagina/qsite/_plugins/cache";  
 import eventBus from '@imagina/qsite/_plugins/eventBus';
+import buildKanbanStructure from 'src/modules/qramp/_components/scheduleKanban/actions/buildKanbanStructure.ts';
 
 export const APP_ONLINE = ({ commit }) => {
     commit('APP_ONLINE');
@@ -12,12 +13,17 @@ export const APP_OFFLINE = ({ commit }) => {
 export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
     const interval = setInterval(async() => {
         const requests = await cache.get.item('requests');
+        const STATUS = 'pending';
 
         if (requests && Object.keys(requests).length) {
             const userRequests = requests[params.userId] || []
 
             if (userRequests) {
                 commit('SET_REQUESTS', userRequests);
+                const pendingRequests = userRequests.filter(request => request.status === STATUS)
+                if (pendingRequests.length) {
+                    buildKanbanStructure()
+                }
             }
         }
     }, 1000);
