@@ -1,6 +1,7 @@
 import appConfig from 'src/config/app'
 import cache from "@imagina/qsite/_plugins/cache";  
 import eventBus from '@imagina/qsite/_plugins/eventBus';
+import { moduleOfflineHandler } from '../../_plugins/moduleOfflineHandler'
 import Vue from 'vue'
 
 export const APP_ONLINE = ({ commit }) => {
@@ -32,12 +33,7 @@ export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
                 if (!havePendingRequests && haveUserRequests && !executed) {
                     Vue.prototype.$alert.info('Synchronizing data')
                     
-                    const modules = await config('main')
-                    Object.entries(modules).forEach(async ([moduleName, module]) => {
-                        if (module.offline && typeof module.offline === 'function') {
-                            await module.offline(true);
-                        }
-                    });
+                    moduleOfflineHandler()
                     executed = true
                 }
             }
