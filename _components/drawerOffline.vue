@@ -8,7 +8,7 @@
       </div>
       <!-- Close icon -->
       <q-icon name="fas fa-times" color="blue-grey" size="20px" class="cursor-pointer"
-        @click="$eventBus.$emit('toggleMasterDrawer', 'offline')" />
+        @click="eventBus.emit('toggleMasterDrawer', 'offline')" />
     </div>
     <!--Separator-->
     <q-separator class="q-my-md" />
@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import eventBus from '@imagina/qsite/_plugins/eventBus'
+
 export default {
   name: "drawerOffline",
   props: {},
@@ -42,7 +44,7 @@ export default {
   watch: {},
 
   beforeDestroy() {
-    this.$eventBus.$off('header.badge.manage');
+    eventBus.off('header.badge.manage');
   },
   mounted() {
     this.$nextTick(async () => {
@@ -53,6 +55,7 @@ export default {
   data() {
     return {
       refreshIntervalId: null,
+      eventBus
     }
   },
   methods: {
