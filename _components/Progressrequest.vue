@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import eventBus from '@imagina/qsite/_plugins/eventBus'
 
 export default {
     name: "Progressrequest",
@@ -109,13 +110,13 @@ export default {
         }
     },
     beforeDestroy() {
-        this.$eventBus.$off('offlineSync');
+        eventBus.off('offlineSync');
     },
     mounted() {
         this.$nextTick(async () => {
             clearInterval(this.interval);
             this.interval = setInterval(() => this.checkTimeToSync(), 500000);
-            this.$eventBus.$on('offlineSync', async () => {
+            eventBus.on('offlineSync', async () => {
                 if (this.offlineSetting == 1) {
                     this.syncOffline(true);
                 }
