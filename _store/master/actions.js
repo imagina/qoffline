@@ -1,6 +1,8 @@
 import appConfig from 'src/config/app'
-import cache from "@imagina/qsite/_plugins/cache";
+import cache from "@imagina/qsite/_plugins/cache";  
 import eventBus from '@imagina/qsite/_plugins/eventBus';
+import { moduleOfflineHandler } from '../../_plugins/moduleOfflineHandler'
+import Vue from 'vue'
 
 export const APP_ONLINE = ({ commit }) => {
     commit('APP_ONLINE');
@@ -8,28 +10,32 @@ export const APP_ONLINE = ({ commit }) => {
 export const APP_OFFLINE = ({ commit }) => {
     commit('APP_OFFLINE');
 };
-let callToAllLists = false
 
 export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
+    let executed = false
+
     const interval = setInterval(async() => {
         const requests = await cache.get.item('requests');
-        const STATUS = 'pending'
+        const STATUS = 'pending';
 
         if (requests && Object.keys(requests).length) {
             const userRequests = requests[params.userId] || []
 
-            const thereAreRequests = userRequests.some(
-                requests => requests.status === STATUS
-            )
-            if (!thereAreRequests && !callToAllLists) {
-                callToAllLists = true
-            }
-
-            if (thereAreRequests && callToAllLists) {
-                callToAllLists = false
-            }
             if (userRequests) {
                 commit('SET_REQUESTS', userRequests);
+                const pendingRequests = userRequests.filter(request => request.status === STATUS)
+
+                const havePendingRequests = pendingRequests.length > 0
+                const haveUserRequests = userRequests.length > 0
+
+                if (havePendingRequests) executed = false
+
+                if (!havePendingRequests && haveUserRequests && !executed) {
+                    Vue.prototype.$alert.info('Synchronizing data')
+                    
+                    moduleOfflineHandler()
+                    executed = true
+                }
             }
         }
     }, 1000);
