@@ -2,7 +2,7 @@ import appConfig from 'src/config/app'
 import cache from "modules/qsite/_plugins/cache";
 import eventBus from 'modules/qsite/_plugins/eventBus';
 import { moduleOfflineHandler } from '../../_plugins/moduleOfflineHandler'
-import Vue from 'vue'
+//import Vue from 'vue'
 
 export const APP_ONLINE = ({ commit }) => {
     commit('APP_ONLINE');
@@ -31,7 +31,7 @@ export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
                 if (havePendingRequests) executed = false
 
                 if (!havePendingRequests && haveUserRequests && !executed) {
-                    Vue.prototype.$alert.info('Synchronizing data')
+                    //[ptc]Vue.prototype.$alert.info('Synchronizing data')
 
                     moduleOfflineHandler()
                     executed = true
