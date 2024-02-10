@@ -1,6 +1,6 @@
 import appConfig from 'src/config/app'
-import cache from "@imagina/qsite/_plugins/cache";  
-import eventBus from '@imagina/qsite/_plugins/eventBus';
+import cache from "modules/qsite/_plugins/cache";
+import eventBus from 'modules/qsite/_plugins/eventBus';
 import { moduleOfflineHandler } from '../../_plugins/moduleOfflineHandler'
 import Vue from 'vue'
 
@@ -32,7 +32,7 @@ export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
 
                 if (!havePendingRequests && haveUserRequests && !executed) {
                     Vue.prototype.$alert.info('Synchronizing data')
-                    
+
                     moduleOfflineHandler()
                     executed = true
                 }
@@ -68,7 +68,7 @@ export const SUB_MODULES_REFRESH_OFFLINE = ({ commit, dispatch, state }, refresh
 
         //Search module in node_modules
         try {
-            offlineConfig = require(`@imagina/${moduleName}/_config/offline`)
+            offlineConfig = require(`modules/${moduleName}/_config/offline`)
         } catch (e) {}
 
         //Search module in project (src)

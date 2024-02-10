@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import eventBus from '@imagina/qsite/_plugins/eventBus'
+import eventBus from 'modules/qsite/_plugins/eventBus'
 import state from '../_store/master/state'
 import { moduleOfflineHandler } from '../_plugins/moduleOfflineHandler'
 
@@ -48,7 +48,7 @@ export default {
   beforeDestroy() {
     eventBus.$off('header.badge.manage');
 
-    // Cancelling interval created to update the list 
+    // Cancelling interval created to update the list
     // of requests displayed in drawerOffline.
 
     // Path where the interval is created: qoffline/_store/master/actions
@@ -58,10 +58,10 @@ export default {
   mounted() {
     this.$nextTick(async () => {
       this.$store.dispatch(
-        'qofflineMaster/OFFLINE_REQUESTS', 
+        'qofflineMaster/OFFLINE_REQUESTS',
         { userId: this.$store.state.quserAuth.userId }
       )
-      
+
       moduleOfflineHandler()
     });
   },
