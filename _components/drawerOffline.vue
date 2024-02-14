@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import eventBus from 'modules/qsite/_plugins/eventBus'
+import { eventBus } from 'src/plugins/utils'
 import state from '../_store/master/state'
 import { moduleOfflineHandler } from '../_plugins/moduleOfflineHandler'
 
