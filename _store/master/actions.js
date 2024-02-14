@@ -1,6 +1,5 @@
 import appConfig from 'src/config/app'
-import cache from "modules/qsite/_plugins/cache";
-import eventBus from 'modules/qsite/_plugins/eventBus';
+import { cache, eventBus } from "src/plugins/utils";
 import { moduleOfflineHandler } from '../../_plugins/moduleOfflineHandler'
 //import Vue from 'vue'
 
