@@ -1,4 +1,4 @@
-import appConfig from 'src/config/app'
+import appConfig from 'src/setup/app'
 import { cache, eventBus } from "src/plugins/utils";
 import { moduleOfflineHandler } from '../../_plugins/moduleOfflineHandler'
 //import Vue from 'vue'
