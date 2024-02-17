@@ -30,7 +30,7 @@ export default {
             progressRequestsCompleted: 0,
             progressLabel: '0.00%',
             interval: null,
-            offlineSetting: this.$store.getters['qsiteApp/getSettingValueByName']('isite::offline')
+            offlineSetting: this.$getSetting('isite::offline')
         }
     },
     computed: {
