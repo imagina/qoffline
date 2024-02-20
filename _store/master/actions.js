@@ -52,9 +52,9 @@ export const REFRESH_OFFLINE = ({ commit, dispatch, state }) => {
             if (refreshOffline) {
                 dispatch("SUB_MODULES_REFRESH_OFFLINE", true)
                 cache.set("refreshOffline", false)
-                eventBus.$emit('page.data.refresh')
-                eventBus.$emit('crud.data.refresh')
-                eventBus.$emit('export.data.refresh')
+                eventBus.emit('page.data.refresh')
+                eventBus.emit('crud.data.refresh')
+                eventBus.emit('export.data.refresh')
             }
         }, 1000);
 

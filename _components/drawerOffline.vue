@@ -46,7 +46,7 @@ export default {
   watch: {},
 
   beforeDestroy() {
-    eventBus.$off('header.badge.manage');
+    eventBus.off('header.badge.manage');
 
     // Cancelling interval created to update the list
     // of requests displayed in drawerOffline.
