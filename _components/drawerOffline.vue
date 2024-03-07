@@ -13,22 +13,59 @@
     <!--Separator-->
     <q-separator class="q-my-md" />
     <q-list>
-      <div v-for="request in this.$store.state.qofflineMaster.requestsReversed" :key="request._id">
-        <q-item class="q-py-xs">
+      <div v-for="request in requests" :key="request._id">
+        <q-item
+          class="
+            tw-flex-col
+            tw-py-5
+            tw-rounded-lg
+            tw-bg-white
+            tw-shadow-lg
+            tw-mb-4
+          "
+        >
           <q-item-section>
-            <q-item-label>{{ getTitle(request)}}</q-item-label>
-            <q-item-label caption lines="2">{{ translateRequestMethod(request.method) }}</q-item-label>
+            <q-item-label
+              class="
+                tw-text-sm
+                tw-text-gray-400
+              "
+            >
+              {{ getTitle(request).titleOffline || '' }}
+            </q-item-label>
+            <q-item-label
+              class="
+                tw-font-bold
+                tw-text-base
+              "
+              v-if="getTitle(request).id"
+            >
+              ID: {{ getTitle(request).id }}
+            </q-item-label>
           </q-item-section>
-          <q-item-section side top>
-            <q-icon v-if="request.status == 'failed'" name="fa-light fa-xmark" color="negative" />
-            <q-icon v-if="request.status == 'success'" name="fa-light fa-check" color="positive" />
-            <q-icon v-if="request.status == 'pending'" name="fa-light fa-spinner-third fa-spin" color="warning" />
-            <q-item-label caption>{{ translateRequestStatus(request.status) }}</q-item-label>
-            <q-item-label caption>{{ $moment(request.createdAt).fromNow() }}</q-item-label>
+          <q-item-section
+            class="
+              tw-flex-row
+              tw-justify-between
+              tw-items-center
+              tw-mt-2
+              tw-text-gray-400
+            "
+            style="margin-left: 0;"
+          >
+            <q-item-label class="tw-font-semibold">
+              <q-icon
+                :name="actions[request?.requestData?.method].icon"
+                :color="actions[request?.requestData?.method].color"
+                size="14px" class="q-mr-sm"
+              />
+              {{ actions[request?.requestData?.method].action }}
+            </q-item-label>
+            <q-item-label class="tw-text-sm">
+              {{ $moment(request?.timestamp).fromNow() }}
+            </q-item-label>
           </q-item-section>
-
         </q-item>
-        <q-separator class="q-my-xs" spaced inset />
       </div>
     </q-list>
   </div>
@@ -36,7 +73,6 @@
 
 <script>
 import { eventBus } from 'src/plugins/utils'
-import state from '../_store/master/state'
 import { moduleOfflineHandler } from '../_plugins/moduleOfflineHandler'
 
 export default {
@@ -47,13 +83,6 @@ export default {
 
   beforeDestroy() {
     eventBus.off('header.badge.manage');
-
-    // Cancelling interval created to update the list
-    // of requests displayed in drawerOffline.
-
-    // Path where the interval is created: qoffline/_store/master/actions
-    clearInterval(state.offlineInterval)
-    this.$store.commit('qofflineMaster/CLEAR_OFFLINE_INTERVAL', state)
   },
   mounted() {
     this.$nextTick(async () => {
@@ -65,30 +94,50 @@ export default {
       moduleOfflineHandler()
     });
   },
+  computed: {
+    requests() {
+      return this.$store.state.qofflineMaster.requestsReversed
+    }
+  },
   data() {
     return {
       refreshIntervalId: null,
-      eventBus
+      eventBus,
+      actions: {
+        POST: {
+          icon: 'fa-solid fa-square-plus',
+          action: 'Create',
+          color: 'secondary'
+        },
+        PUT: {
+          icon: 'fa-solid fa-arrows-rotate',
+          action: 'Update',
+          color: 'warning'
+        },
+        DELETE: {
+          icon: 'fa-solid fa-trash',
+          action: 'Delete',
+          color: 'negative'
+        }
+      }
     }
   },
   methods: {
-    getTitle(request){
-      const bodyParse = JSON.parse(request.body);
-      return bodyParse?.attributes?.title_offline || request.titleOffline;
+    decode(data) {
+      if (!data) return
+      const decoder = new TextDecoder('utf-8')
+      const body = decoder.decode(data)
+      return JSON.parse(body)
+    },
+    getTitle(request) {
+      if (request?.requestData?.body) {
+        const body = this.decode(request.requestData.body)
+        const attributes = body?.attributes
 
-    },
-    translateRequestStatus(status) {
-      switch (status) {
-        case 'pending': return "Pending";
-        case 'success': return "Success";
-        case 'failed': return "Failed";
-      }
-    },
-    translateRequestMethod(method) {
-      switch (method) {
-        case 'post': return "Create";
-        case 'put': return "Update";
-        case 'delete': return "Delete";
+        return {
+          ...attributes,
+          titleOffline: attributes?.titleOffline || attributes?.title_offline
+        }
       }
     },
   },

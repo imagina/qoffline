@@ -10,35 +10,29 @@ export const APP_OFFLINE = ({ commit }) => {
 };
 
 export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
-    let executed = false
 
-    const interval = setInterval(async() => {
-        const requests = await cache.get.item('requests');
-        const STATUS = 'pending';
+    navigator.serviceWorker.addEventListener('message', eventListener => {
+        const NAME_DB = 'workbox-background-sync'
+        const NAME_STORAGE = 'requests'
+        
+        indexedDB.open(NAME_DB).onsuccess = function(event) {
+            const db = event.target.result;
+            const transaction = db.transaction(NAME_STORAGE, 'readonly')
+            const objectStore = transaction.objectStore(NAME_STORAGE)
+            objectStore.getAll().onsuccess = function(event) {
+                const requests = event.target.result
 
-        if (requests && Object.keys(requests).length) {
-            const userRequests = requests[params.userId] || []
-
-            if (userRequests) {
-                commit('SET_REQUESTS', userRequests);
-                const pendingRequests = userRequests.filter(request => request.status === STATUS)
-
-                const havePendingRequests = pendingRequests.length > 0
-                const haveUserRequests = userRequests.length > 0
-
-                if (havePendingRequests) executed = false
-
-                if (!havePendingRequests && haveUserRequests && !executed) {
-                    alert.info('Synchronizing data')
-
+                if (requests) {
+                    commit('SET_REQUESTS', requests);
                     moduleOfflineHandler()
-                    executed = true
                 }
             }
         }
-    }, 1000);
 
-    commit('SET_INTERVAL', interval);
+        if (eventListener.data === 'sync-data') {
+            alert.info('Synchronizing data')
+        }
+    })
 }
 
 export const REFRESH_OFFLINE = ({ commit, dispatch, state }) => {
