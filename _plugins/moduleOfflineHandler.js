@@ -3,7 +3,7 @@ export const moduleOfflineHandler = async () => {
     
     Object.entries(modules).forEach(([moduleName, module]) => {
         if (module.offline && typeof module.offline === 'function') {
-            module.offline(true);
+            module.offline();
         } 
     });
 }
