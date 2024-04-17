@@ -3,7 +3,7 @@
 <script>
 export default {
   name: "Alert",
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener("online", this.connectionSwitch);
     window.removeEventListener("offline", this.connectionSwitch);
   },

@@ -109,7 +109,7 @@ export default {
             }, 2000)
         }
     },
-    beforeDestroy() {
+    beforeUnmount() {
         eventBus.off('offlineSync');
     },
     mounted() {
