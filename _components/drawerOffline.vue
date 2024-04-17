@@ -81,7 +81,7 @@ export default {
   components: {},
   watch: {},
 
-  beforeDestroy() {
+  beforeUnmount() {
     eventBus.off('header.badge.manage');
   },
   mounted() {
