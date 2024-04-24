@@ -1,9 +1,19 @@
-export const moduleOfflineHandler = async (refresh) => {
+export const workOrderListLoadHandler = async (refresh) => {
     const modules = await config('main')
     
-    Object.entries(modules).forEach(([moduleName, module]) => {
-        if (module.offline && typeof module.offline === 'function') {
-            module.offline(refresh);
+    Object.entries(modules).forEach(async ([moduleName, module]) => {
+        if (module.uploadWorkOrderLists && typeof module.uploadWorkOrderLists === 'function') {
+            await module.uploadWorkOrderLists(refresh);
+        } 
+    });
+}
+
+export const workOrderListRefreshHandler = async (refresh) => {
+    const modules = await config('main')
+    
+    Object.entries(modules).forEach(async ([moduleName, module]) => {
+        if (module.refreshWorkOrders && typeof module.refreshWorkOrders === 'function') {
+            await module.refreshWorkOrders(refresh);
         } 
     });
 }

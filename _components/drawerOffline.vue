@@ -73,7 +73,7 @@
 
 <script>
 import { eventBus } from 'src/plugins/utils'
-import { moduleOfflineHandler } from '../_plugins/moduleOfflineHandler'
+import { workOrderListLoadHandler } from '../_plugins/moduleOfflineHandler'
 
 export default {
   name: "drawerOffline",
@@ -91,7 +91,7 @@ export default {
         { userId: this.$store.state.quserAuth.userId }
       )
 
-      moduleOfflineHandler()
+      await workOrderListLoadHandler()
     });
   },
   computed: {
