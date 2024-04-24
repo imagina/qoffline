@@ -34,19 +34,3 @@ export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
         }
     })
 }
-
-export const REFRESH_OFFLINE = ({ commit, dispatch, state }) => {
-    return new Promise(async(resolve, reject) => {
-
-        let interval = setInterval(async() => {
-            let refreshOffline = await cache.get.item("refreshOffline")
-            if (refreshOffline) {
-                cache.set("refreshOffline", false)
-                eventBus.emit('page.data.refresh')
-                eventBus.emit('crud.data.refresh')
-                eventBus.emit('export.data.refresh')
-            }
-        }, 1000);
-
-    })
-}
