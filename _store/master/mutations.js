@@ -7,5 +7,5 @@ export const APP_ONLINE = (state) => {
 
 export function SET_REQUESTS (state, data) {
   state.requestsReversed = data.reverse()
-  state.totalRequests = state.requests?.length
+  state.totalRequests = data.length
 }
