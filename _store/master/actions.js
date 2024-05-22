@@ -29,6 +29,7 @@ export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
 
         if (eventListener.data === 'sync-data') {
             await preloadData('refresh')
+            if (typeof params.callback === 'function') params.callback(true)
             alert.info('Synchronizing data')
         }
     })
