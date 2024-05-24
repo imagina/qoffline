@@ -13,7 +13,7 @@
     <!--Separator-->
     <q-separator class="q-my-md" />
     <q-list>
-      <div v-for="request in requests" :key="request._id">
+      <div v-for="request in requests" :key="request?.id">
         <q-item
           class="
             tw-flex-col
@@ -31,16 +31,16 @@
                 tw-text-gray-400
               "
             >
-              {{ getTitle(request).titleOffline || '' }}
+              {{ getTitle(request)?.titleOffline }}
             </q-item-label>
             <q-item-label
               class="
                 tw-font-bold
                 tw-text-base
               "
-              v-if="getTitle(request).id"
+              v-if="getTitle(request)?.id"
             >
-              ID: {{ getTitle(request).id }}
+              ID: {{ getTitle(request)?.id }}
             </q-item-label>
           </q-item-section>
           <q-item-section
@@ -73,7 +73,7 @@
 
 <script>
 import { eventBus } from 'src/plugins/utils'
-import { moduleOfflineHandler } from '../_plugins/moduleOfflineHandler'
+import { preloadData } from '../_plugins/handleModuleCalls'
 
 export default {
   name: "drawerOffline",
@@ -91,7 +91,7 @@ export default {
         { userId: this.$store.state.quserAuth.userId }
       )
 
-      moduleOfflineHandler()
+      await preloadData()
     });
   },
   computed: {
@@ -124,10 +124,15 @@ export default {
   },
   methods: {
     decode(data) {
-      if (!data) return
-      const decoder = new TextDecoder('utf-8')
-      const body = decoder.decode(data)
-      return JSON.parse(body)
+      try {
+        if (!data) return
+        const decoder = new TextDecoder('utf-8')
+        const body = decoder.decode(data)
+        if (!body) return {}
+        return JSON.parse(body)
+      } catch (error) {
+        console.error('Error decoding data', error)
+      }
     },
     getTitle(request) {
       if (request?.requestData?.body) {
@@ -135,8 +140,8 @@ export default {
         const attributes = body?.attributes
 
         return {
-          ...attributes,
-          titleOffline: attributes?.titleOffline || attributes?.title_offline
+          id: attributes?.id || '',
+          titleOffline: attributes?.titleOffline || attributes?.title_offline || ''
         }
       }
     },
