@@ -6,6 +6,10 @@ export const APP_ONLINE = (state) => {
 };
 
 export function SET_REQUESTS (state, data) {
-  state.requestsReversed = data.reverse()
-  state.totalRequests = data.length
+  const STATUS = 'PENDING'
+  
+  state.requestsReversed = data?.reverse()
+
+  const requestPending = data.filter(request => request.metadata.status === STATUS)
+  state.totalRequests = requestPending.length
 }
