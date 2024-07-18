@@ -24,24 +24,34 @@
             tw-mb-4
           "
         >
-          <q-item-section>
-            <q-item-label
-              class="
-                tw-text-sm
-                tw-text-gray-400
-              "
-            >
-              {{ getTitle(request)?.titleOffline }}
-            </q-item-label>
-            <q-item-label
-              class="
-                tw-font-bold
-                tw-text-base
-              "
-              v-if="getTitle(request)?.id"
-            >
-              ID: {{ getTitle(request)?.id }}
-            </q-item-label>
+          <q-item-section class="tw-flex tw-flex-row tw-justify-between">
+            <section>
+              <q-item-label
+                class="
+                  tw-text-sm
+                  tw-text-gray-400
+                "
+              >
+                {{ getTitle(request)?.titleOffline }}
+              </q-item-label>
+              <q-item-label
+                class="
+                  tw-font-bold
+                  tw-text-base
+                "
+                v-if="getTitle(request)?.id"
+              >
+                ID: {{ getTitle(request)?.id }}
+              </q-item-label>
+            </section>
+            <section>
+              <q-tooltip>{{ status[request?.metadata?.status].label }}</q-tooltip>
+              <i 
+                class="fa-solid fa-paper-plane-top"
+                :class="status[request?.metadata?.status].color"
+              >
+              </i>
+            </section>
           </q-item-section>
           <q-item-section
             class="
@@ -119,24 +129,27 @@ export default {
           action: 'Delete',
           color: 'negative'
         }
+      },
+      status: {
+        SUCCESSFUL: {
+          label: 'Success',
+          color: 'tw-text-green-500'
+        },
+        FAILED: {
+          label: 'Failed',
+          color: 'tw-text-red-500'
+        },
+        PENDING: {
+          label: 'Pending',
+          color: 'tw-text-gray-400'
+        }
       }
     }
   },
   methods: {
-    decode(data) {
-      try {
-        if (!data) return
-        const decoder = new TextDecoder('utf-8')
-        const body = decoder.decode(data)
-        if (!body) return {}
-        return JSON.parse(body)
-      } catch (error) {
-        console.error('Error decoding data', error)
-      }
-    },
     getTitle(request) {
       if (request?.requestData?.body) {
-        const body = this.decode(request.requestData.body)
+        const body = JSON.parse(request.requestData.body)
         const attributes = body?.attributes
 
         return {
