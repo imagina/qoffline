@@ -46,11 +46,7 @@
             </section>
             <section>
               <q-tooltip>{{ status[request?.metadata?.status].label }}</q-tooltip>
-              <i 
-                class="fa-solid fa-paper-plane-top"
-                :class="status[request?.metadata?.status].color"
-              >
-              </i>
+              <i :class="status[request?.metadata?.status].class"></i>
             </section>
           </q-item-section>
           <q-item-section
@@ -133,15 +129,15 @@ export default {
       status: {
         SUCCESSFUL: {
           label: 'Success',
-          color: 'tw-text-green-500'
+          class: 'fa-solid fa-circle-check tw-text-green-500'
         },
         FAILED: {
           label: 'Failed',
-          color: 'tw-text-red-500'
+          class: 'fa-solid fa-circle-exclamation tw-text-red-500'
         },
         PENDING: {
           label: 'Pending',
-          color: 'tw-text-gray-400'
+          class: 'fa-solid fa-spinner-third fa-spin tw-text-gray-400'
         }
       }
     }
