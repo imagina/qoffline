@@ -51,9 +51,7 @@ const closeManners = () => {
                     <q-linear-progress rounded size="12px" :value="progress" color="secondary" class="q-mt-sm" />
                 </section>
                 <q-scroll-area style="height: 550px;" :thumb-style="{ width: '5px' }">
-                <section class="tw-overflow-y-auto tw-h-full">
                     <slot />
-                </section>
                 </q-scroll-area>
             </section>
         </div>

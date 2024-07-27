@@ -38,7 +38,6 @@ export default {
   watch: {
     isAppOffline: {
       handler(newValue) {
-        console.log('navigator.onLine', newValue,  this.pendingRequests)
         if (!newValue && this.pendingRequests) {
           this.$store.dispatch('qofflineMaster/OPEN_MODAL_SYNC')
         }
@@ -68,6 +67,9 @@ export default {
     },
     isAppOffline() {
       return this.$store.state.qofflineMaster.isAppOffline
+    },
+    pendingRequests() {
+      return this.$store.state.qofflineMaster.pendingRequests > 0
     },
   },
   data() {
