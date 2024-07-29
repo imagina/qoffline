@@ -8,6 +8,14 @@ export const APP_OFFLINE = ({ commit }) => {
     commit('APP_OFFLINE');
 };
 
+export const OPEN_MODAL_SYNC = ({ commit }) => {
+    commit('HANDLE_MODAL_SYNC', true);
+}
+
+export const CLOSE_MODAL_SYNC = ({ commit }) => {
+    commit('HANDLE_MODAL_SYNC', false);
+}
+
 export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
     navigator.serviceWorker.addEventListener('message', async eventListener => {
         const NAME_STORAGE = 'storage'
@@ -35,10 +43,14 @@ export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
         }
         
     
-        if (eventListener.data === 'sync-data') {
+        if (eventListener.data === 'synchronizing-data') {
+            alert.info('Synchronizing data')
+        }
+
+        if (eventListener.data === 'synchronized-data') {
             await preloadData('refresh')
             if (typeof params.callback === 'function') params.callback(true)
-            alert.info('Synchronizing data')
+            alert.info('Synchronized data')
         }
     })
 }

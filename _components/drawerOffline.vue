@@ -12,81 +12,42 @@
     </div>
     <!--Separator-->
     <q-separator class="q-my-md" />
-    <q-list>
-      <div v-for="request in requests" :key="request?.id">
-        <q-item
-          class="
-            tw-flex-col
-            tw-py-5
-            tw-rounded-lg
-            tw-bg-white
-            tw-shadow-lg
-            tw-mb-4
-          "
-        >
-          <q-item-section class="tw-flex tw-flex-row tw-justify-between">
-            <section>
-              <q-item-label
-                class="
-                  tw-text-sm
-                  tw-text-gray-400
-                "
-              >
-                {{ getTitle(request)?.titleOffline }}
-              </q-item-label>
-              <q-item-label
-                class="
-                  tw-font-bold
-                  tw-text-base
-                "
-                v-if="getTitle(request)?.id"
-              >
-                ID: {{ getTitle(request)?.id }}
-              </q-item-label>
-            </section>
-            <section>
-              <q-tooltip>{{ status[request?.metadata?.status].label }}</q-tooltip>
-              <i :class="status[request?.metadata?.status].class"></i>
-            </section>
-          </q-item-section>
-          <q-item-section
-            class="
-              tw-flex-row
-              tw-justify-between
-              tw-items-center
-              tw-mt-2
-              tw-text-gray-400
-            "
-            style="margin-left: 0;"
-          >
-            <q-item-label class="tw-font-semibold">
-              <q-icon
-                :name="actions[request?.requestData?.method].icon"
-                :color="actions[request?.requestData?.method].color"
-                size="14px" class="q-mr-sm"
-              />
-              {{ actions[request?.requestData?.method].action }}
-            </q-item-label>
-            <q-item-label class="tw-text-sm">
-              {{ $moment(request?.timestamp).fromNow() }}
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-      </div>
-    </q-list>
+    <requestList />
   </div>
+  <dataSynchronizationModal>
+    <template v-slot:default>
+      <requestList />
+    </template>
+  </dataSynchronizationModal>
 </template>
 
 <script>
 import { eventBus } from 'src/plugins/utils'
 import { preloadData } from '../_plugins/handleModuleCalls'
+import requestList from './requestList.vue';
+import dataSynchronizationModal from './dataSynchronizationModal.vue';
+
 
 export default {
   name: "drawerOffline",
   props: {},
-  components: {},
-  watch: {},
-
+  components: {
+    requestList,
+    dataSynchronizationModal
+  },
+  watch: {
+    isAppOffline: {
+      handler(newValue) {
+        if (!newValue && this.pendingRequests) {
+          this.$store.dispatch('qofflineMaster/OPEN_MODAL_SYNC')
+        }
+        if (newValue) {
+          this.$store.dispatch('qofflineMaster/CLOSE_MODAL_SYNC')
+        }
+      },
+      deep: true
+    },
+  },
   beforeUnmount() {
     eventBus.off('header.badge.manage');
   },
@@ -103,43 +64,18 @@ export default {
   computed: {
     requests() {
       return this.$store.state.qofflineMaster.requestsReversed
-    }
+    },
+    isAppOffline() {
+      return this.$store.state.qofflineMaster.isAppOffline
+    },
+    pendingRequests() {
+      return this.$store.state.qofflineMaster.pendingRequests > 0
+    },
   },
   data() {
     return {
       refreshIntervalId: null,
       eventBus,
-      actions: {
-        POST: {
-          icon: 'fa-solid fa-square-plus',
-          action: 'Create',
-          color: 'secondary'
-        },
-        PUT: {
-          icon: 'fa-solid fa-arrows-rotate',
-          action: 'Update',
-          color: 'warning'
-        },
-        DELETE: {
-          icon: 'fa-solid fa-trash',
-          action: 'Delete',
-          color: 'negative'
-        }
-      },
-      status: {
-        SUCCESSFUL: {
-          label: 'Success',
-          class: 'fa-solid fa-circle-check tw-text-green-500'
-        },
-        FAILED: {
-          label: 'Failed',
-          class: 'fa-solid fa-circle-exclamation tw-text-red-500'
-        },
-        PENDING: {
-          label: 'Pending',
-          class: 'fa-solid fa-spinner-third fa-spin tw-text-gray-400'
-        }
-      }
     }
   },
   methods: {
