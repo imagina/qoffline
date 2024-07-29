@@ -47,6 +47,14 @@ export default {
       },
       deep: true
     },
+    numberPendingRequests: {
+      handler(newValue) {
+        if (navigator.onLine && newValue > 0) {
+          this.$store.dispatch('qofflineMaster/OPEN_MODAL_SYNC')
+        }
+      },
+      deep: true
+    },
   },
   beforeUnmount() {
     eventBus.off('header.badge.manage');
@@ -68,8 +76,11 @@ export default {
     isAppOffline() {
       return this.$store.state.qofflineMaster.isAppOffline
     },
+    numberPendingRequests() {
+      return this.$store.state.qofflineMaster.pendingRequests
+    },
     pendingRequests() {
-      return this.$store.state.qofflineMaster.pendingRequests > 0
+      return this.numberPendingRequests > 0
     },
   },
   data() {
