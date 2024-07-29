@@ -62,7 +62,7 @@ const closeManners = () => {
     >
         <div>
             <section class="tw-flex tw-flex-col tw-text-center tw-p-5 tw-rounded-2xl tw-bg-gray-100 tw-w-80 tw-gap-4">
-                <span class="tw-text-base tw-font-medium">Pending requests sent</span>
+                <span class="tw-text-base tw-font-medium">Requests made offline sent</span>
                 <q-btn unelevated rounded color="positive" @click.stop="closeManners">
                     Ok
                 </q-btn>
