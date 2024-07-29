@@ -1,6 +1,6 @@
 <script setup>
 import { computed, watch, ref, onMounted } from 'vue'
-import { store } from 'src/plugins/utils.ts'
+import { store, i18n } from 'src/plugins/utils.ts'
 
 const isOpenModalFinally = ref(false)
 
@@ -62,7 +62,7 @@ const closeManners = () => {
     >
         <div>
             <section class="tw-flex tw-flex-col tw-text-center tw-p-5 tw-rounded-2xl tw-bg-gray-100 tw-w-80 tw-gap-4">
-                <span class="tw-text-base tw-font-medium">Requests made offline sent</span>
+                <span class="tw-text-base tw-font-medium">{{ i18n.tr('ioffline.cms.messages.requestsSuccessfullySynced') }}</span>
                 <q-btn unelevated rounded color="positive" @click.stop="closeManners">
                     Ok
                 </q-btn>

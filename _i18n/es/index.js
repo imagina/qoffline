@@ -3,6 +3,9 @@ export default {
     "cms": {
       "sidebar": {
         "adminGroup": "Offline"
+      },
+      "messages": {
+        "requestsSuccessfullySynced": "Solicitudes sin conexión sincronizadas correctamente"
       }
     }
   }
