@@ -1,35 +1,35 @@
 <script setup>
 import { computed } from 'vue'
-import { store } from 'src/plugins/utils.ts'
+import { store, i18n } from 'src/plugins/utils.ts'
 
 const actions = {
     POST: {
         icon: 'fa-solid fa-square-plus',
-        action: 'Create',
+        action: i18n.tr('ioffline.cms.labels.create'),
         color: 'secondary'
     },
     PUT: {
         icon: 'fa-solid fa-arrows-rotate',
-        action: 'Update',
+        action: i18n.tr('ioffline.cms.labels.update'),
         color: 'warning'
     },
     DELETE: {
         icon: 'fa-solid fa-trash',
-        action: 'Delete',
+        action: i18n.tr('ioffline.cms.labels.delete'),
         color: 'negative'
     }
 }
 const status = {
     SUCCESSFUL: {
-        label: 'Success',
+        label: i18n.tr('ioffline.cms.labels.success'),
         class: 'fa-solid fa-circle-check tw-text-green-500'
     },
     FAILED: {
-        label: 'Failed',
+        label: i18n.tr('ioffline.cms.labels.failed'),
         class: 'fa-solid fa-circle-exclamation tw-text-red-500'
     },
     PENDING: {
-        label: 'Pending',
+        label: i18n.tr('ioffline.cms.labels.pending'),
         class: 'fa-solid fa-spinner-third fa-spin tw-text-gray-400'
     }
 }
