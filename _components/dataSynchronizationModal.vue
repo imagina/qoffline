@@ -1,6 +1,6 @@
 <script setup>
 import { computed, watch, ref, onMounted } from 'vue'
-import { store } from 'src/plugins/utils.ts'
+import { store, i18n } from 'src/plugins/utils.ts'
 
 const isOpenModalFinally = ref(false)
 
@@ -36,7 +36,9 @@ const closeManners = () => {
         <div>
             <section class="tw-flex tw-flex-col tw-gap-5 tw-p-5 tw-rounded-2xl tw-bg-gray-100 tw-w-80">
                 <section class="tw-flex tw-justify-between">
-                    <h1 class="tw-font-semibold tw-text-base">Sinchronizing Offline request</h1>
+                    <h1 class="tw-font-semibold tw-text-base">
+                        {{ i18n.tr('ioffline.cms.labels.sinchronizingOfflineRequests') }}
+                    </h1>
                     <div>
                         <i 
                             :class="{
@@ -47,7 +49,9 @@ const closeManners = () => {
                     </div>
                 </section>
                 <section class="tw-text-center">
-                    <span class="tw-text-sm tw-text-gray-400">{{ remainingPendingRequests }}/{{ totalRequests }}</span>
+                    <span class="tw-text-sm tw-text-gray-400">
+                        {{ remainingPendingRequests }}/{{ totalRequests }}
+                    </span>
                     <q-linear-progress rounded size="12px" :value="progress" color="secondary" class="q-mt-sm" />
                 </section>
                 <q-scroll-area style="height: 550px;" :thumb-style="{ width: '5px' }">
@@ -62,9 +66,11 @@ const closeManners = () => {
     >
         <div>
             <section class="tw-flex tw-flex-col tw-text-center tw-p-5 tw-rounded-2xl tw-bg-gray-100 tw-w-80 tw-gap-4">
-                <span class="tw-text-base tw-font-medium">Pending requests sent</span>
+                <span class="tw-text-base tw-font-medium">
+                    {{ i18n.tr('ioffline.cms.messages.requestsSuccessfullySynced') }}
+                </span>
                 <q-btn unelevated rounded color="positive" @click.stop="closeManners">
-                    Ok
+                    {{ i18n.tr('ioffline.cms.labels.ok') }}
                 </q-btn>
             </section>
         </div>
