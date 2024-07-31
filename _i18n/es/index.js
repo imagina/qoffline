@@ -7,6 +7,12 @@ export default {
       "labels": {
         "sinchronizingOfflineRequests" : "Sincronización de solicitudes sin conexión",
         "ok": "Listo",
+        "create": "Crear",
+        "Update": "Actualizar",
+        "delete": "Eliminar",
+        "success": "Exitoso",
+        "failed": "Fallido",
+        "pending": "Pendiente",
       },
       "messages": {
         "requestsSuccessfullySynced": "Solicitudes sin conexión sincronizadas correctamente"
