@@ -8,7 +8,7 @@ export default {
         "sinchronizingOfflineRequests" : "Sinchronizing Offline requests",
         "ok": "Ok",
         "create": "Create",
-        "Update": "Update",
+        "update": "Update",
         "delete": "Delete",
         "success": "Success",
         "failed": "Failed",
