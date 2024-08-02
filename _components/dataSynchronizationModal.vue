@@ -11,13 +11,13 @@ const remainingPendingRequests = computed(() => totalRequests.value - pendingReq
 const progress = computed(() => remainingPendingRequests.value / totalRequests.value)
 
 watch(pendingRequests, (newValue) => {
-    if (newValue === 0) {
+    if (newValue === 0 && isOpenModal.value) {
         isOpenModalFinally.value = true
     }
 })
 
 onMounted(() => {
-    if (pendingRequests === 0) {
+    if (pendingRequests === 0 && isOpenModal.value) {
         isOpenModalFinally.value = true
     }
 })
