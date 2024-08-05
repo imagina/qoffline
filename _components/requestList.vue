@@ -40,8 +40,8 @@ const getTitle = (request) => {
         const attributes = body?.attributes
 
         return {
-        id: attributes?.id || '',
-        titleOffline: attributes?.titleOffline || attributes?.title_offline || ''
+            id: attributes?.id || '',
+            titleOffline: body?.titleOffline || attributes?.titleOffline || attributes?.title_offline || ''
         }
     }
 }
