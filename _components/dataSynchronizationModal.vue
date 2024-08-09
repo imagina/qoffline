@@ -33,8 +33,8 @@ const closeManners = () => {
         v-model="isOpenModal" 
         persistent
     >
-        <div>
-            <section class="tw-flex tw-flex-col tw-gap-5 tw-p-5 tw-rounded-2xl tw-bg-gray-100 tw-w-80">
+        <div class="tw-w-full sm:tw-w-80">
+            <section class="tw-flex tw-flex-col tw-gap-5 tw-p-5 tw-rounded-2xl tw-bg-gray-100">
                 <section class="tw-flex tw-justify-between">
                     <h1 class="tw-font-semibold tw-text-base">
                         {{ i18n.tr('ioffline.cms.labels.sinchronizingOfflineRequests') }}
@@ -65,7 +65,7 @@ const closeManners = () => {
         persistent
     >
         <div>
-            <section class="tw-flex tw-flex-col tw-text-center tw-p-5 tw-rounded-2xl tw-bg-gray-100 tw-w-80 tw-gap-4">
+            <section class="tw-flex tw-flex-col tw-text-center tw-p-5 tw-rounded-2xl tw-bg-gray-100 tw-w-full sm:tw-w-80 tw-gap-4">
                 <span class="tw-text-base tw-font-medium">
                     {{ i18n.tr('ioffline.cms.messages.requestsSuccessfullySynced') }}
                 </span>
