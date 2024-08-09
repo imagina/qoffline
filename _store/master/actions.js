@@ -1,4 +1,4 @@
-import { alert, cache } from "src/plugins/utils";
+import { cache } from "src/plugins/utils";
 import { preloadData } from '../../_plugins/handleModuleCalls'
 
 export const APP_ONLINE = ({ commit }) => {
@@ -43,14 +43,10 @@ export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
         }
         
     
-        if (eventListener.data === 'synchronizing-data') {
-            alert.info('Synchronizing data')
-        }
 
         if (eventListener.data === 'synchronized-data') {
             await preloadData('refresh')
             if (typeof params.callback === 'function') params.callback(true)
-            alert.info('Synchronized data')
         }
     })
 }
