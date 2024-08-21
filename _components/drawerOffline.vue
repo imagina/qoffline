@@ -14,7 +14,7 @@
     <q-separator class="q-my-md" />
     <requestList />
   </div>
-  <dataSynchronizationModal>
+  <dataSynchronizationModal v-if="isOpenModal">
     <template v-slot:default>
       <requestList />
     </template>
@@ -82,6 +82,9 @@ export default {
     pendingRequests() {
       return this.numberPendingRequests > 0
     },
+    isOpenModal() {
+      return this.$store.state.qofflineMaster.isOpenModalSync
+    }
   },
   data() {
     return {

@@ -16,10 +16,25 @@ watch(pendingRequests, (newValue) => {
     }
 })
 
+const triggerSyncEvent = async () => {
+    if (navigator.serviceWorker.controller) {
+        try {
+            await navigator.serviceWorker.controller.postMessage({ 
+                type: 'trigger-sync-event' 
+            });
+        } catch (error) {
+            console.error('Error triggering sync event:', error);
+        }
+    } else {
+        console.error('Service Worker is not active');
+    }
+}
+
 onMounted(() => {
     if (pendingRequests === 0 && isOpenModal.value) {
         isOpenModalFinally.value = true
     }
+    triggerSyncEvent()
 })
 
 const closeManners = () => {
