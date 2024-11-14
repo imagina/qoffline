@@ -7,12 +7,14 @@ export const HANDLE_MODAL_SYNC = (state, data) => {
 
 export function SET_REQUESTS (state, data=[]) {
   const STATUS = 'PENDING'
-  
-  state.requestsReversed = data?.reverse() || []
 
-  state.totalRequests = data?.length || 0
-  const pendingRequests = data?.filter(request => request.metadata.status === STATUS)
-  state.pendingRequests = pendingRequests?.length || 0
+  const validatedData = Array.isArray(data) ? data : []
+  
+  state.requestsReversed = validatedData.reverse()
+
+  state.totalRequests = validatedData.length
+  const pendingRequests = validatedData.filter(request => request.metadata.status === STATUS)
+  state.pendingRequests = pendingRequests.length
 }
 
 export const APP_ONLINE = (state) => {
