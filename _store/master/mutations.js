@@ -4,6 +4,9 @@ export const APP_OFFLINE = (state) => {
 export const HANDLE_MODAL_SYNC = (state, data) => {
   state.isOpenModalSync = data;
 };
+export const HANDLE_PRELOAD_STATUS = (state, data) => {
+  state.dataPreloadDone = data;
+};
 
 export function SET_REQUESTS (state, data=[]) {
   const STATUS = 'PENDING'

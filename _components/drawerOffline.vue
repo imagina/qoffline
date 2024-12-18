@@ -66,7 +66,11 @@ export default {
         { userId: this.$store.state.quserAuth.userId }
       )
 
-      await preloadData()
+      if (!this.$store.state.qofflineMaster.dataPreloadDone) {
+        await preloadData()
+        this.$store.dispatch('qofflineMaster/PRELOADED_DATA')
+      }
+
     });
   },
   computed: {
