@@ -16,6 +16,10 @@ export const CLOSE_MODAL_SYNC = ({ commit }) => {
     commit('HANDLE_MODAL_SYNC', false);
 }
 
+export const PRELOADED_DATA = ({ commit }) => {
+    commit('HANDLE_PRELOAD_STATUS', true);
+}
+
 export const OFFLINE_REQUESTS = ({ commit, dispatch, state }, params = {}) => {
     navigator.serviceWorker.addEventListener('message', async eventListener => {
         const NAME_STORAGE = 'storage'

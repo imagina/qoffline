@@ -3,5 +3,6 @@ export default {
   requestsReversed: [],
   totalRequests: null,
   pendingRequests: null,
-  isOpenModalSync: false
+  isOpenModalSync: false,
+  dataPreloadDone: false
 }

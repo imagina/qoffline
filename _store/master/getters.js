@@ -4,3 +4,6 @@ export const isOffline = (state) => {
 export const offlineRequests = (state) => {
   return state.requests;
 };
+export const dataPreloadDone = (state) => {
+  return state.dataPreloadDone;
+};
